@@ -1,104 +1,149 @@
 //
 //  WJProgressHUD.m
-//  TeBaoBao
+//  Test
 //
-//  Created by 王杰 on 2018/11/2.
-//  Copyright © 2018年 tebaobao. All rights reserved.
+//  Created by 王杰 on 2019/6/4.
+//  Copyright © 2019 wangjie. All rights reserved.
 //
 
-#import "WJProgressHUD.h"
+#import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import "WJProgressHUD.h"
+
+@interface WJHUD : UIView
+
+@property (nonatomic, strong) UIView *bgView;
+
+@property (nonatomic, strong) UILabel *messageLabel;
+
+@property (nonatomic, strong) UIImageView *gifView;
+
+@property (nonatomic, strong) UIView *prohibitView;
+
+@end
+
+@implementation WJHUD
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.hidden = YES;
+        self.userInteractionEnabled = NO;
+        _bgView = [[UIView alloc] init];
+        _bgView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+        _bgView.layer.cornerRadius = 5;
+        [self addSubview:_bgView];
+        
+        _messageLabel = [[UILabel alloc] init];
+        _messageLabel.font = [UIFont boldSystemFontOfSize:14];
+        _messageLabel.textColor = [UIColor whiteColor];
+        _messageLabel.textAlignment = NSTextAlignmentCenter;
+        _messageLabel.numberOfLines = 0;
+        [_bgView addSubview:_messageLabel];
+        
+        _gifView = [[UIImageView alloc] init];
+        _gifView.image = [UIImage imageNamed:@"loading_icon"];
+        [self addSubview:_gifView];
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+        animation.duration = 0.8;
+        animation.byValue = [NSNumber numberWithFloat:2 * M_PI];
+        animation.repeatCount = MAXFLOAT;
+        animation.removedOnCompletion = NO;
+        [_gifView.layer addAnimation:animation forKey:nil];
+    }
+    return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    CGSize size = [_messageLabel sizeThatFits:CGSizeMake(self.frame.size.width - 70, CGFLOAT_MAX)];
+    CGRect rect = [[UIApplication sharedApplication].keyWindow convertRect:CGRectMake(([UIScreen mainScreen].bounds.size.width - size.width - 30) / 2, ([UIScreen mainScreen].bounds.size.height - size.height - 20) / 2, size.width + 30, size.height + 20) toView:self];
+    _bgView.frame = CGRectMake((self.frame.size.width - size.width - 30) / 2, rect.origin.y, rect.size.width, rect.size.height);
+    _messageLabel.frame = CGRectMake(15, 10, rect.size.width - 30, rect.size.height - 20);
+    size = _gifView.image.size;
+    rect = [[UIApplication sharedApplication].keyWindow convertRect:CGRectMake(([UIScreen mainScreen].bounds.size.width - size.width) / 2, ([UIScreen mainScreen].bounds.size.height - size.height) / 2, size.width, size.height) toView:self];
+    _gifView.frame = CGRectMake((self.frame.size.width - size.width) / 2, rect.origin.y, rect.size.width, rect.size.height);
+}
+
+- (void)showTextHud:(NSString *)text {
+    [self removeHUD];
+    if (text.length == 0) return;
+    _gifView.hidden = YES;
+    _bgView.hidden = NO;
+    _messageLabel.text = text;
+    [self setNeedsLayout];
+    self.hidden = NO;
+    [self performSelector:@selector(removeHUD) withObject:nil afterDelay:1 inModes:@[NSRunLoopCommonModes]];
+}
+
+- (void)removeHUD {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    _prohibitView.userInteractionEnabled = YES;
+    self.hidden = YES;
+}
+
+- (void)showIndicator {
+    [self showIndicatorProhibitView:nil];
+}
+
+- (void)showIndicatorProhibitView:(nullable UIView *)prohibitView {
+    _bgView.hidden = YES;
+    _gifView.hidden = NO;
+    _prohibitView.userInteractionEnabled = YES;
+    prohibitView.userInteractionEnabled = NO;
+    _prohibitView = prohibitView;
+    [self performSelector:@selector(startAnimation) withObject:nil afterDelay:0.1 inModes:@[NSRunLoopCommonModes]];
+}
+
+- (void)startAnimation {
+    self.hidden = NO;
+}
+
+@end
+
+/////////////////////////////////////////////////////////////////////////
 
 @interface UIView (WJHUD)
 
-@property (nonatomic, strong) WJProgressHUD *hud_wj;
+@property (nonatomic, strong) WJHUD *hud;
 
 @end
 
 @implementation UIView (WJHUD)
+@dynamic hud;
 
-- (void)setHud_wj:(WJProgressHUD *)hud_wj {
-    objc_setAssociatedObject(self, @selector(hud_wj), hud_wj, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (WJProgressHUD *)hud_wj {
-    return objc_getAssociatedObject(self, _cmd);
+- (WJHUD *)hud {
+    WJHUD *hud = objc_getAssociatedObject(self, _cmd);
+    if (!hud) {
+        hud = [[WJHUD alloc] init];
+        hud.frame = self.bounds;
+        [self addSubview:hud];
+        objc_setAssociatedObject(self, _cmd, hud, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    [self bringSubviewToFront:hud];
+    return hud;
 }
 
 @end
 
-/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 
 @implementation WJProgressHUD
 
 + (void)showTextHud:(NSString *)text inView:(UIView *)view {
-    [self removeHUDForView:view];
-    WJProgressHUD *hud = [[[self class] alloc] initWithFrame:view.bounds];
-    hud.userInteractionEnabled = NO;
-    UIView *bgView = [[UIView alloc] init];
-    bgView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
-    bgView.layer.cornerRadius = 5;
-    UILabel *messageLabel = [[UILabel alloc] init];
-    messageLabel.text = text;
-    messageLabel.font = [UIFont boldSystemFontOfSize:14];
-    messageLabel.textColor = [UIColor whiteColor];
-    messageLabel.textAlignment = NSTextAlignmentCenter;
-    messageLabel.numberOfLines = 0;
-    messageLabel.clipsToBounds = YES;
-    CGSize size = [messageLabel sizeThatFits:CGSizeMake(hud.frame.size.width - 70, CGFLOAT_MAX)];
-    CGRect rect = [[UIApplication sharedApplication].keyWindow convertRect:CGRectMake(([UIScreen mainScreen].bounds.size.width - size.width - 30) / 2, ([UIScreen mainScreen].bounds.size.height - size.height - 20) / 2, size.width + 30, size.height + 20) toView:view];
-    bgView.frame = rect;
-    messageLabel.frame = CGRectMake(15, 10, rect.size.width - 30, rect.size.height - 20);
-    [bgView addSubview:messageLabel];
-    [hud addSubview:bgView];
-    view.hud_wj = hud;
-    [view addSubview:hud];
-    [self performSelector:@selector(removeHUDForView:) withObject:view afterDelay:1.5];
+    [view.hud showTextHud:text];
 }
 
-+ (void)showProhibitIndicatorHudInView:(UIView *)view {
-    [self showIndicatorInView:view userInteractionEnabled:YES];
++ (void)showIndicatorHudInView:(UIView *)view prohibitView:(nullable UIView *)prohibitView {
+    [view.hud showIndicatorProhibitView:prohibitView];
 }
 
 + (void)showIndicatorHudInView:(UIView *)view {
-    [self showIndicatorInView:view userInteractionEnabled:NO];
-}
-
-+ (void)showIndicatorInView:(UIView *)view userInteractionEnabled:(BOOL)userInteractionEnabled {
-    if (!view) return;
-    [self removeHUDForView:view];
-    [self performSelector:@selector(showIndicator:) withObject:@{@"view":view, @"userInteractionEnabled":@(userInteractionEnabled)} afterDelay:0.1];
-}
-
-+ (void)showIndicator:(NSDictionary *)dict {
-    UIView *view = dict[@"view"];
-    BOOL userInteractionEnabled = [[dict objectForKey:@"userInteractionEnabled"] boolValue];
-    WJProgressHUD *hud = [[[self class] alloc] initWithFrame:view.bounds];
-    hud.userInteractionEnabled = userInteractionEnabled;
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.image = [UIImage imageNamed:@"loading_icon"];
-    CGSize size = imageView.image.size;
-    CGRect rect = [[UIApplication sharedApplication].keyWindow convertRect:CGRectMake(([UIScreen mainScreen].bounds.size.width - size.width) / 2, ([UIScreen mainScreen].bounds.size.height - size.height) / 2, size.width, size.height) toView:view];
-    imageView.frame = rect;
-    [hud addSubview:imageView];
-    [view addSubview:hud];
-    view.hud_wj = hud;
-    //开启动画
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
-    animation.duration = 0.8;
-    animation.byValue = [NSNumber numberWithFloat:2 * M_PI];
-    animation.repeatCount = MAXFLOAT;
-    animation.removedOnCompletion = NO;
-    [imageView.layer addAnimation:animation forKey:nil];
-    
+    [view.hud showIndicator];
 }
 
 + (void)removeHUDForView:(UIView *)view {
-    [self cancelPreviousPerformRequestsWithTarget:self];
-    if (view.hud_wj) {
-        [view.hud_wj removeFromSuperview];
-        view.hud_wj = nil;
-    }
+    [view.hud removeHUD];
 }
 
 @end

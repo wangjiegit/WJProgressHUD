@@ -1,21 +1,25 @@
 //
 //  WJProgressHUD.h
-//  TeBaoBao
+//  Test
 //
-//  Created by 王杰 on 2018/11/2.
-//  Copyright © 2018年 tebaobao. All rights reserved.
+//  Created by 王杰 on 2019/6/4.
+//  Copyright © 2019 wangjie. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface WJProgressHUD : UIView
+NS_ASSUME_NONNULL_BEGIN
+
+@interface WJProgressHUD : NSObject
 
 + (void)showTextHud:(NSString *)text inView:(UIView *)view;
 
-+ (void)showProhibitIndicatorHudInView:(UIView *)view;//禁止交互
++ (void)showIndicatorHudInView:(UIView *)view prohibitView:(nullable UIView *)prohibitView;//禁止交互
 
 + (void)showIndicatorHudInView:(UIView *)view;//可以交互
 
 + (void)removeHUDForView:(UIView *)view;
 
 @end
+
+NS_ASSUME_NONNULL_END

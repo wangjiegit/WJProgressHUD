@@ -13,9 +13,9 @@
 		A072983E219313D200DFAF2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A072983D219313D200DFAF2F /* Assets.xcassets */; };
 		A0729841219313D200DFAF2F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A072983F219313D200DFAF2F /* LaunchScreen.storyboard */; };
 		A0729844219313D200DFAF2F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A0729843219313D200DFAF2F /* main.m */; };
-		A072984C2193143900DFAF2F /* WJProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A072984A2193143800DFAF2F /* WJProgressHUD.m */; };
 		A07298522193164E00DFAF2F /* loading_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A07298502193164E00DFAF2F /* loading_icon@2x.png */; };
 		A07298532193164E00DFAF2F /* loading_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A07298512193164E00DFAF2F /* loading_icon@3x.png */; };
+		A0DC24B322A65BDC00B513FE /* WJProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A0DC24B222A65BDC00B513FE /* WJProgressHUD.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,10 +29,10 @@
 		A0729840219313D200DFAF2F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A0729842219313D200DFAF2F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A0729843219313D200DFAF2F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		A072984A2193143800DFAF2F /* WJProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJProgressHUD.m; sourceTree = "<group>"; };
-		A072984B2193143800DFAF2F /* WJProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJProgressHUD.h; sourceTree = "<group>"; };
 		A07298502193164E00DFAF2F /* loading_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loading_icon@2x.png"; sourceTree = "<group>"; };
 		A07298512193164E00DFAF2F /* loading_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loading_icon@3x.png"; sourceTree = "<group>"; };
+		A0DC24B122A65BDC00B513FE /* WJProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJProgressHUD.h; sourceTree = "<group>"; };
+		A0DC24B222A65BDC00B513FE /* WJProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,10 +67,10 @@
 			children = (
 				A0729834219313CF00DFAF2F /* AppDelegate.h */,
 				A0729835219313CF00DFAF2F /* AppDelegate.m */,
+				A0DC24B122A65BDC00B513FE /* WJProgressHUD.h */,
+				A0DC24B222A65BDC00B513FE /* WJProgressHUD.m */,
 				A0729837219313CF00DFAF2F /* ViewController.h */,
 				A0729838219313CF00DFAF2F /* ViewController.m */,
-				A072984B2193143800DFAF2F /* WJProgressHUD.h */,
-				A072984A2193143800DFAF2F /* WJProgressHUD.m */,
 				A07298502193164E00DFAF2F /* loading_icon@2x.png */,
 				A07298512193164E00DFAF2F /* loading_icon@3x.png */,
 				A072983A219313CF00DFAF2F /* Main.storyboard */,
@@ -155,7 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0729839219313CF00DFAF2F /* ViewController.m in Sources */,
-				A072984C2193143900DFAF2F /* WJProgressHUD.m in Sources */,
+				A0DC24B322A65BDC00B513FE /* WJProgressHUD.m in Sources */,
 				A0729844219313D200DFAF2F /* main.m in Sources */,
 				A0729836219313CF00DFAF2F /* AppDelegate.m in Sources */,
 			);
