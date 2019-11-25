@@ -72,6 +72,12 @@
     _bgView.hidden = NO;
     _messageLabel.text = text;
     [self setNeedsLayout];
+    [self layoutIfNeeded];
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    animation.duration = 0.1;
+    animation.fromValue = @(0.3);
+    animation.toValue = @(1.0);
+    [_bgView.layer addAnimation:animation forKey:nil];
     self.hidden = NO;
     [self performSelector:@selector(removeHUD) withObject:nil afterDelay:1 inModes:@[NSRunLoopCommonModes]];
 }

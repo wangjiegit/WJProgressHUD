@@ -17,8 +17,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [WJProgressHUD showIndicatorHudInView:self.view];
+//    [WJProgressHUD showIndicatorHudInView:self.view];
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [WJProgressHUD showTextHud:@"上传成功" inView:self.view];
 }
 
 
